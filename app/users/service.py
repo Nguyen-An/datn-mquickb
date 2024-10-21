@@ -7,10 +7,8 @@ from .models import *
 from datetime import datetime
 from jose import jwt
 from os import getenv
-
+from .crud import *
 class UserService:
     async def get_profile_service(db: Session):
-        data = {
-                "id": "123123", 
-            }
-        return data
+        user = get_users(db)
+        return user

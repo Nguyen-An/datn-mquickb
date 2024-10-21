@@ -5,15 +5,12 @@ from datetime import datetime
 
 Base = declarative_base()
 
-# SQLAlchemy model
-class User(Base):
-    __tablename__ = 'users'
-    
+class Table(Base):
+    __tablename__ = 'tables'
+
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(100))
-    email = Column(String(100))
-    password_hash = Column(String(255))
-    role = Column(String(20))
-    phone_number = Column(String(20))
+    table_name = Column(String(50))
+    qr_code = Column(String(255))
+    status = Column(String(20), default='available')
     created_at = Column(TIMESTAMP, default=datetime.utcnow)
     updated_at = Column(TIMESTAMP, default=datetime.utcnow, onupdate=datetime.utcnow)
