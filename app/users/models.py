@@ -17,3 +17,9 @@ class User(Base):
     phone_number = Column(String(20))
     created_at = Column(TIMESTAMP, default=datetime.utcnow)
     updated_at = Column(TIMESTAMP, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+class UserCreate(BaseModel):
+    name: str
+    email: str
+    role: str
+    phone_number: str

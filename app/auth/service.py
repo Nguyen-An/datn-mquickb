@@ -14,10 +14,11 @@ class AuthService:
         user = get_user_by_mail(db, userLogin.email)
         if user is None:
             raise HTTPException(status_code=404, detail="ITEM_NOT_FOUND")
+        
         # check password
-        # check = verify_password(userLogin.password, user.password)
-        # if check != True:
-        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="password_incorrect")
+        check = verify_password(userLogin.password, user.password_hash)
+        if check != True:
+            raise HTTPException(status_code=401, detail="PASSWORD_INCORRECT")
         
         #get token
         data = {

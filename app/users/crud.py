@@ -9,3 +9,9 @@ def get_users(db: Session, skip: int = 0, limit: int = 10):
 def get_user_by_mail(db: Session, email: str):
     user = db.query(User).filter(User.email == email).first()
     return user
+
+def create_user_db(db: Session, user: User):
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user

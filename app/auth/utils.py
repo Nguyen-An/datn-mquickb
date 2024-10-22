@@ -36,15 +36,6 @@ def verify_token(authorization: str = Header(None), request: Request = None, db:
 
 async def checktoken(token: str, db: Session):
     try:        
-        # print(token)
-        check_token = get_token_by_code(db, token)
-        
-        if check_token is None:
-            return {
-                "result": False,
-                "data": None
-            }
-        
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])        
         return {
             "result": True,

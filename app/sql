@@ -82,4 +82,4 @@ CREATE TABLE chatbot_data (
 );
 
 INSERT INTO users (name, email, password_hash, role, phone_number)
-VALUES ('Nguyễn Văn A', 'nguyenvana@example.com', 'hashed_password', 'user', '0123456789');
+VALUES ('admin', 'admin@gmail.com', '$2b$12$rS0yLDWAF6n3sMgHDBbiAOPWE5yIvqyt92OonLUWLsYF5NFvweOkq', 'manager', '0123456789');
