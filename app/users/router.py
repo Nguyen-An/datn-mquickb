@@ -25,3 +25,5 @@ async def get_profile_user(request:Request, db: Session = Depends(get_db)):
             status_code=e.status_code,
             content=create_error_response(e.detail, ERR_CODE.get(e.detail, "Unknown error code"))
         )  
+    
+

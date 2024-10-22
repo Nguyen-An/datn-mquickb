@@ -1,6 +1,9 @@
 # Responses msg
-ERR_CODE = {
-    "INTERNAL_SERVER_ERROR": "Internal server error",
+STT_CODE = {
+    "INTERNAL_SERVER_ERROR": "Server lỗi, vui lòng liên hệ admin!",
+    "SUCCESS": "Thành công.",
+    "TOKEN_INVALID": "Token không hợp lệ",
+
 }
 
 def create_error_response(detail: str, error_code: str):

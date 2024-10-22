@@ -4,6 +4,7 @@ from contextlib import contextmanager,asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from app.users.router import router_users
+from app.auth.router import router_auth
 
 @asynccontextmanager
 async def lifespan_context(app: FastAPI):
@@ -25,6 +26,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.include_router(router_auth)
 app.include_router(router_users)
 load_dotenv()
 
