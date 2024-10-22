@@ -29,18 +29,3 @@ app.add_middleware(
 app.include_router(router_auth)
 app.include_router(router_users)
 load_dotenv()
-
-
-# from fastapi import FastAPI
-
-# app = FastAPI()
-
-# app.include_router(router_users)
-
-# @app.get("/")
-# def read_root():
-#     return {"message": "Hello, World!"}
-
-# @app.get("/items/{item_id}")
-# def read_item(item_id: int, q: str = None):
-#     return {"item_id": item_id, "query": q}

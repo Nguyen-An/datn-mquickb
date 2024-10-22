@@ -1,5 +1,6 @@
 from fastapi import HTTPException, status
 from .responses_msg import *
+from fastapi.responses import JSONResponse
 
 # Phản hồi cho 200 OK
 ok_response = {
@@ -60,23 +61,23 @@ common_responses = {
 def OK(data: any = None):
     if data is None:
         return {
-            "message": STT_CODE.SUCCESS
+            "message": STT_CODE.get("SUCCESS", "")
         }
     else:
         return {
-            "message": STT_CODE.SUCCESS,
+            "message": STT_CODE.get("SUCCESS", ""),
             "data": data
         }
     
 def return_exception(e):
     e.status_code = getattr(e, 'status_code', 500)
-
     if e.status_code == 400:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=e.detail)
+        return JSONResponse(status_code=400, content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code")))
     if e.status_code == 404:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.detail)
+        return JSONResponse(status_code=404, content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code")))
     if e.status_code == 401:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.detail)
+        return JSONResponse(status_code=401, content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code")))
     if e.status_code == 403:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=e.detail)
-    raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=STT_CODE.INTERNAL_SERVER_ERROR)
+        return JSONResponse(status_code=403, content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code")))
+    
+    return JSONResponse(status_code=500, content=create_error_response("INTERNAL_SERVER_ERROR", STT_CODE.get("INTERNAL_SERVER_ERROR", "Unknown error code")))
