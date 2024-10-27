@@ -11,9 +11,10 @@ from .crud import *
 from ..common.encryption import *
 
 class MenuService: 
-    async def get_list_menu_item(db: Session):
+    async def get_list_menu_item(db: Session, page:int, page_size:int):
         try:
-            return 1
+            list_menu_items = get_list_menu_item(db, page, page_size)
+            return list_menu_items
         except Exception as e:
             raise HTTPException(status_code=500, detail="INTERNAL_SERVER_ERROR")
 
@@ -30,6 +31,19 @@ class MenuService:
             )
 
             menuItem = create_menu_item_db(db, new_menuItem)
+            return menuItem
+        except Exception as e:
+            raise HTTPException(status_code=500, detail="INTERNAL_SERVER_ERROR")
+        
+    async def update_menu_item(db: Session,item_id: int, menuItemCreate : MenuItemCreate):
+        try:
+            existing_item = get_menu_item_by_id(db, item_id)
+            if not existing_item:
+                raise HTTPException(
+                    status_code=404, detail=f"MenuItem with id {item_id} not found."
+            )
+
+            menuItem = update_menu_item_db(db, item_id, menuItemCreate)
             return menuItem
         except Exception as e:
             raise HTTPException(status_code=500, detail="INTERNAL_SERVER_ERROR")

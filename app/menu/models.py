@@ -26,3 +26,10 @@ class MenuItemCreate(BaseModel):
     category: str
     is_available: bool
 
+class MenuItemUpdate(BaseModel):
+    name: str
+    description: str
+    image_link: str
+    price: int
+    category: str
+    is_available: bool

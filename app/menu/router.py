@@ -15,12 +15,11 @@ router_menus = APIRouter(
 )
 
 @router_menus.get("")
-async def get_profile_user(request:Request, db: Session = Depends(get_db)):
+async def get_list_menu_item(request:Request, page:int=1, page_size:int=20, db: Session = Depends(get_db)):
     try:
         # print("request: ", request.state.info_user)
-        # u = await UserService.get_profile_service(db)
-        
-        return 2
+        mi = await MenuService.get_list_menu_item(db,page,page_size)
+        return mi
     except Exception as e:
         return JSONResponse(
             status_code=e.status_code,
@@ -28,12 +27,34 @@ async def get_profile_user(request:Request, db: Session = Depends(get_db)):
         )  
     
 @router_menus.post("")
-async def get_profile_user(request:Request, menuItemCreate : MenuItemCreate, db: Session = Depends(get_db)):
+async def create_menu_item(request:Request, menuItemCreate : MenuItemCreate, db: Session = Depends(get_db)):
     try:
         # print("request: ", request.state.info_user)
-        u = await MenuService.create_menu_item(db, menuItemCreate)
-        
-        return u
+        mi = await MenuService.create_menu_item(db, menuItemCreate)
+        return mi
+    except Exception as e:
+        return JSONResponse(
+            status_code=e.status_code,
+            content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
+        )  
+    
+
+@router_menus.put("/{item_id}")
+async def update_menu_item(request:Request,item_id: int, menuItemUpdate : MenuItemUpdate, db: Session = Depends(get_db)):
+    try:
+        mi = await MenuService.update_menu_item(db,item_id, menuItemUpdate)
+        return mi
+    except Exception as e:
+        return JSONResponse(
+            status_code=e.status_code,
+            content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
+        )  
+    
+@router_menus.delete("/{item_id}")
+async def delete_menu_item(request:Request,item_id: int, db: Session = Depends(get_db)):
+    try:
+        mi = await MenuService.delete_menu_item(db,item_id)
+        return mi
     except Exception as e:
         return JSONResponse(
             status_code=e.status_code,
