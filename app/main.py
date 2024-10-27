@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from app.users.router import router_users
 from app.auth.router import router_auth
+from app.menu.router import router_menus
 from app.auth.utils import gettoken, checktoken
 from app.common.responses_msg import *
 from fastapi.responses import JSONResponse
@@ -44,4 +45,5 @@ app.add_middleware(
 )
 app.include_router(router_auth)
 app.include_router(router_users)
+app.include_router(router_menus)
 load_dotenv()

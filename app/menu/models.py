@@ -17,3 +17,12 @@ class MenuItem(Base):
     is_available = Column(Boolean, default=True)
     created_at = Column(TIMESTAMP, default=datetime.utcnow)
     updated_at = Column(TIMESTAMP, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+class MenuItemCreate(BaseModel):
+    name: str
+    description: str
+    image_link: str
+    price: int
+    category: str
+    is_available: bool
+

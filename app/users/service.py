@@ -5,7 +5,6 @@ from .crud import *
 from ..common.responses_msg import *
 from .models import *
 from datetime import datetime
-from jose import jwt
 from os import getenv
 from .crud import *
 from ..common.encryption import *
