@@ -11,9 +11,14 @@ def create_menu_item_db(db: Session, menuItem: MenuItem):
 
 def get_list_menu_item(db: Session, page: int, page_size: int):
     offset = (int(page) - 1) * int(page_size)
-    total = db.query(MenuItem).count()
-    items = db.query(MenuItem).offset(offset).limit(page_size).all()
     total_pages = (total + page_size - 1) // page_size
+    limit = page_size
+    if page == -1:
+        offset = 1
+        limit = 9999999999
+        total_pages = 1
+    total = db.query(MenuItem).count()
+    items = db.query(MenuItem).offset(offset).limit(limit).all()
     return {
         "total": total, 
         "total_pages": total_pages, 

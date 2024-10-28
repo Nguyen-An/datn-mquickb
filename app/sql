@@ -93,6 +93,8 @@ CREATE TABLE order_items (
     quantity INT,
     status VARCHAR(20),
     price bigint,
+    created_by INT,
+    updated_by INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

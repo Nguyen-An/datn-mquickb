@@ -8,6 +8,7 @@ from datetime import datetime
 from os import getenv
 from .crud import *
 from ..common.encryption import *
+from sqlalchemy.orm import Session
 
 class UserService:
     async def get_profile_service(db: Session):

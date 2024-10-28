@@ -17,7 +17,6 @@ router_menus = APIRouter(
 @router_menus.get("")
 async def get_list_menu_item(request:Request, page:int=1, page_size:int=20, db: Session = Depends(get_db)):
     try:
-        # print("request: ", request.state.info_user)
         mi = await MenuService.get_list_menu_item(db,page,page_size)
         return mi
     except Exception as e:
