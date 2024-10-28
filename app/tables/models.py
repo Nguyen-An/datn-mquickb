@@ -14,3 +14,8 @@ class Table(Base):
     status = Column(String(20), default='available')
     created_at = Column(TIMESTAMP, default=datetime.utcnow)
     updated_at = Column(TIMESTAMP, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+class TableCreate(BaseModel):
+    table_name: str
+    qr_code: str
+    status: str
