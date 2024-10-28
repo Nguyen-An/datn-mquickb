@@ -24,6 +24,8 @@ class OrderItem(Base):
     quantity = Column(Integer)
     status = Column(String(20))
     price = Column(BigInteger)
+    created_at = Column(TIMESTAMP, default=datetime.utcnow)
+    updated_at = Column(TIMESTAMP, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 class StaffCall(Base):
     __tablename__ = 'staff_calls'

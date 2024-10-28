@@ -22,11 +22,11 @@ class AuthService:
                 raise HTTPException(status_code=401, detail="PASSWORD_INCORRECT")
             
             #get token
-            data = {
+            data = { 
                 "id": user.id, 
                 "name": user.name, 
                 "email": user.email, 
-                "phone_number": user.phone_number, 
+                "phone_number": user.phone_number , 
                 "role_id": user.role,
             }
 

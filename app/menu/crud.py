@@ -37,3 +37,11 @@ def update_menu_item_db(db: Session, item_id: int, menuItem: MenuItem):
     db.commit()
     db.refresh(db_item)
     return db_item
+
+def delete_menu_item_db(db: Session, item_id: int):
+    db_item = db.query(MenuItem).filter(MenuItem.id == item_id).first()
+    if not db_item:
+        return None
+    db.delete(db_item)
+    db.commit()
+    return db_item

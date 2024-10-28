@@ -83,3 +83,16 @@ CREATE TABLE chatbot_data (
 
 INSERT INTO users (name, email, password_hash, role, phone_number)
 VALUES ('admin', 'admin@gmail.com', '$2b$12$rS0yLDWAF6n3sMgHDBbiAOPWE5yIvqyt92OonLUWLsYF5NFvweOkq', 'manager', '0123456789');
+
+-- update 28/10/2024
+DROP TABLE IF EXISTS order_items;
+CREATE TABLE order_items (
+    id SERIAL PRIMARY KEY,
+    order_id INT,
+    menu_item_id INT,
+    quantity INT,
+    status VARCHAR(20),
+    price bigint,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
