@@ -10,14 +10,18 @@ def create_order_item_db(db: Session, orderItem: OrderItem):
     db.refresh(orderItem)
     return orderItem
 
+def create_staff_call_db(db: Session, staffCall: StaffCall):
+    db.add(staffCall)
+    db.commit()
+    db.refresh(staffCall)
+    return staffCall
+
 def get_order_db(db: Session,order_id, page:int, page_size:int):
     offset = (int(page) - 1) * int(page_size)
     limit = page_size
     if page == -1:
         offset = 1
         limit = 9999999999
-    
-
     if order_id is None:
         items = db.query(OrderItem).offset(offset).limit(limit).all()
         total = db.query(OrderItem).count()
@@ -33,6 +37,25 @@ def get_order_db(db: Session,order_id, page:int, page_size:int):
         "page_size": page_size, 
         "data": items
         }
+
+def get_staff_call_db(db: Session, page:int, page_size:int):
+    offset = (int(page) - 1) * int(page_size)
+    limit = page_size
+    if page == -1:
+        offset = 1
+        limit = 9999999999
+    items = db.query(StaffCall).offset(offset).limit(limit).all()
+    total = db.query(StaffCall).count()
+
+    total_pages = (total + page_size - 1) // page_size
+    return {
+        "total": total, 
+        "total_pages": total_pages, 
+        "current_page": page, 
+        "page_size": page_size, 
+        "data": items
+        }
+
 
 
 def get_order_id_by_user_id(db: Session, user_id: int):

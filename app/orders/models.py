@@ -36,7 +36,10 @@ class StaffCall(Base):
     id = Column(Integer, primary_key=True, index=True)
     table_id = Column(Integer)
     reason = Column(Text)
+    created_by = Column(Integer)
+    updated_by = Column(Integer)
     created_at = Column(TIMESTAMP, default=datetime.utcnow)
+    updated_at = Column(TIMESTAMP, default=datetime.utcnow, onupdate=datetime.utcnow)
     status = Column(String(20))
 
 class OrderItemCreate(BaseModel):
@@ -48,3 +51,7 @@ class OrderItemCreate(BaseModel):
 class listOrderItemCreate(BaseModel):
     order_id: Optional[int] 
     items: List[OrderItemCreate]
+    
+class StaffCallCreate(BaseModel):
+    table_id: int
+    reason: str

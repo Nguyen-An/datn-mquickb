@@ -44,3 +44,19 @@ class OrderService:
 
         list_order = get_order_db(db, order_id, page, page_size)
         return list_order
+    
+    async def get_staff_call_service(db: Session, info_user, page: int, page_size: int):
+        list_staff_call = get_staff_call_db(db, page, page_size)
+        return list_staff_call
+    
+    async def create_staff_call_service(db: Session,info_user, staffCallCreate: StaffCallCreate):
+        new_staff_call = StaffCall(
+            table_id = staffCallCreate.table_id,
+            reason = staffCallCreate.reason,
+            created_by = info_user.get("id"),
+            updated_by = info_user.get("id"),
+            status = 'pending'
+        )
+
+        staff_call = create_staff_call_db(db, new_staff_call)
+        return staff_call

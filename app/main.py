@@ -7,6 +7,7 @@ from app.users.router import router_users
 from app.auth.router import router_auth
 from app.menu.router import router_menus
 from app.orders.router import router_order
+from app.tables.router import router_tables
 from app.auth.utils import gettoken, checktoken
 from app.common.responses_msg import *
 from fastapi.responses import JSONResponse
@@ -48,4 +49,5 @@ app.include_router(router_auth)
 app.include_router(router_users)
 app.include_router(router_menus)
 app.include_router(router_order)
+app.include_router(router_tables)
 load_dotenv()
