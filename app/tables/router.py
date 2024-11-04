@@ -36,3 +36,16 @@ async def create_table(request:Request, tableCreate : TableCreate, db: Session =
             content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
         )  
     
+# api đặt bàn cho customer
+@router_tables.put("/customer/{table_id}")
+async def create_table(request:Request, table_id: int, db: Session = Depends(get_db)):
+    try:
+        info_user = request.state.info_user
+        t = await TableService.book_table_customer(db, table_id, info_user)
+        return t
+    except Exception as e:
+        return JSONResponse(
+            status_code=e.status_code,
+            content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
+        )  
+    

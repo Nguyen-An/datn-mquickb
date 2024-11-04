@@ -10,6 +10,12 @@ def create_order_item_db(db: Session, orderItem: OrderItem):
     db.refresh(orderItem)
     return orderItem
 
+def create_order_db(db: Session, order: Order):
+    db.add(order)
+    db.commit()
+    db.refresh(order)
+    return order
+
 def create_staff_call_db(db: Session, staffCall: StaffCall):
     db.add(staffCall)
     db.commit()
@@ -60,4 +66,8 @@ def get_staff_call_db(db: Session, page:int, page_size:int):
 
 def get_order_id_by_user_id(db: Session, user_id: int):
     item = db.query(Order).filter(Order.user_id == user_id).order_by(desc(Order.created_at)).first()
+    return item
+
+def check_user_order_table(db: Session, user_id: int):
+    item = db.query(Order).filter(Order.user_id == user_id, Order.status.in_(["pending", "in_progress"])).order_by(desc(Order.created_at)).all()
     return item

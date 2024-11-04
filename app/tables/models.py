@@ -19,3 +19,9 @@ class TableCreate(BaseModel):
     table_name: str
     qr_code: str
     status: str
+
+class TableUpdate(BaseModel):
+    table_name: str
+    qr_code: str
+    status: str
+    
