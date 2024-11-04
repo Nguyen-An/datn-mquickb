@@ -13,6 +13,7 @@ class Order(Base):
     user_id = Column(Integer)
     table_id = Column(Integer)
     total_amount = Column(BigInteger)
+    status = Column(String(20))
     created_at = Column(TIMESTAMP, default=datetime.utcnow)
     updated_at = Column(TIMESTAMP, default=datetime.utcnow, onupdate=datetime.utcnow)
 

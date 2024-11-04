@@ -83,6 +83,8 @@ CREATE TABLE chatbot_data (
 
 INSERT INTO users (name, email, password_hash, role, phone_number)
 VALUES ('admin', 'admin@gmail.com', '$2b$12$rS0yLDWAF6n3sMgHDBbiAOPWE5yIvqyt92OonLUWLsYF5NFvweOkq', 'manager', '0123456789');
+-- tk: admin@gmail.com 
+-- mk: 123456aA
 
 -- update 28/10/2024
 DROP TABLE IF EXISTS order_items;
@@ -110,4 +112,16 @@ CREATE TABLE staff_calls (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status VARCHAR(20)
+);
+
+-- update 4/11/2024
+DROP TABLE IF EXISTS orders;
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    user_id INT,
+    table_id INT,
+    total_amount bigint,
+    status VARCHAR(20),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
