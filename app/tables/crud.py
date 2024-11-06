@@ -31,6 +31,10 @@ def get_table_by_id(db: Session, id: int):
     item = db.query(Table).filter(Table.id == id).first()
     return item
 
+def get_table_by_qr(db: Session, qr_code: str):
+    item = db.query(Table).filter(Table.qr_code == qr_code).first()
+    return item
+
 def update_table_db(db: Session, item_id: int, tableUpdate: TableUpdate):
     db_item = db.query(Table).filter(Table.id == item_id).first()
     for key, value in tableUpdate.dict(exclude_unset=True).items():

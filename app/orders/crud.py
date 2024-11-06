@@ -71,3 +71,14 @@ def get_order_id_by_user_id(db: Session, user_id: int):
 def check_user_order_table(db: Session, user_id: int):
     item = db.query(Order).filter(Order.user_id == user_id, Order.status.in_(["pending", "in_progress"])).order_by(desc(Order.created_at)).all()
     return item
+
+def update_order_db(db: Session, item_id: int, orderUpdate: OrderUpdate):
+    db_item = db.query(Order).filter(Order.id == item_id).first()
+    for key, value in orderUpdate.dict(exclude_unset=True).items():
+        setattr(db_item, key, value)
+
+    # Cập nhật thời gian sửa đổi
+    db_item.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(db_item)
+    return db_item

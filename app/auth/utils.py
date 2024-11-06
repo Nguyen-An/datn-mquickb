@@ -21,19 +21,6 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-def verify_token(authorization: str = Header(None), request: Request = None, db: Session = Depends(get_db)):
-    try:
-        author = authorization
-        token = author.split("Bearer ")[1]
-        check_token = get_token_by_code(db, token)
-        if check_token is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=STT_CODE.TOKEN_INVALID)
-        
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        request.state.info_user = payload
-    except Exception as e:
-        return_exception(e)
-
 async def checktoken(token: str, db: Session):
     try:        
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])        

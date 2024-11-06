@@ -57,4 +57,9 @@ class TableService:
         )
 
         update_table_db(db,table.id, tableUpdate)
-        return order
+        data = {
+            "table_id": table.id,
+            "order_id": order.id
+        }
+        
+        return data

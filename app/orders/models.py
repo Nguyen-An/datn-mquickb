@@ -17,6 +17,11 @@ class Order(Base):
     created_at = Column(TIMESTAMP, default=datetime.utcnow)
     updated_at = Column(TIMESTAMP, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+class OrderUpdate(BaseModel):
+    table_id: int
+    total_amount: int
+    status: str
+
 class OrderItem(Base):
     __tablename__ = 'order_items'
 

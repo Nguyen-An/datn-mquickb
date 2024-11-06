@@ -22,6 +22,15 @@ class UserLogin(BaseModel):
     email: str
     password: str
 
+# UserLoginQR.type ()
+class UserLoginQR(BaseModel):
+    email: str
+    name: str
+    password: str
+    type: str 
+    qrcode: str
+
+
 class TokenData():
     def __init__(self, id, user_name, email, company_id, company_name, phone_number, role_id):
         self.id = id  
