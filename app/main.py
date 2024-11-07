@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from app.users.router import router_users
 from app.auth.router import router_auth
 from app.menu.router import router_menus
+from app.uploadfile.router import router_uploadfile
 from app.orders.router import router_order
 from app.tables.router import router_tables
 from app.auth.utils import gettoken, checktoken
@@ -50,4 +51,5 @@ app.include_router(router_users)
 app.include_router(router_menus)
 app.include_router(router_order)
 app.include_router(router_tables)
+app.include_router(router_uploadfile)
 load_dotenv()
