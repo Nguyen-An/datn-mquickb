@@ -26,6 +26,17 @@ class TableService:
         table = create_table_db(db, new_table)
         return table
 
+    async def update_table_item(db: Session,item_id: int, tableUpdate : TableUpdate):
+        existing_item = get_table_by_id(db, item_id)
+        if not existing_item:
+            raise HTTPException(
+                status_code=404, detail=f"Table with id {item_id} not found."
+        )
+
+        menuItem = update_table_db(db, item_id, tableUpdate)
+        return menuItem
+
+
     async def book_table_customer(db: Session, table_id: int, info_user):
         # Kiểm tra xem bàn còn trống không
         table = get_table_by_id(db, table_id)
@@ -63,3 +74,16 @@ class TableService:
         }
         
         return data
+    
+    async def delete_table_service(db: Session,item_id: int):
+        try:
+            existing_item = get_table_by_id(db, item_id)
+            if not existing_item:
+                raise HTTPException(
+                    status_code=404, detail=f"MenuItem with id {item_id} not found."
+            )
+
+            table = delete_table_service(db, item_id)
+            return table
+        except Exception as e:
+            raise HTTPException(status_code=500, detail="INTERNAL_SERVER_ERROR")

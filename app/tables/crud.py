@@ -27,9 +27,31 @@ def create_table_db(db: Session, table: Table):
     db.refresh(table)
     return table
 
+def update_table_db(db: Session, item_id: int, table: Table):
+    db_item = db.query(Table).filter(Table.id == item_id).first()
+    for key, value in table.dict(exclude_unset=True).items():
+        setattr(db_item, key, value)
+
+    # Cập nhật thời gian sửa đổi
+    db_item.updated_at = datetime.utcnow()
+    
+    db.commit()
+    db.refresh(db_item)
+    return db_item
+
+
 def get_table_by_id(db: Session, id: int):
     item = db.query(Table).filter(Table.id == id).first()
     return item
+
+def delete_table_service(db: Session, item_id: int):
+    db_item = db.query(Table).filter(Table.id == item_id).first()
+    if not db_item:
+        return None
+    db.delete(db_item)
+    db.commit()
+    return db_item
+
 
 def get_table_by_qr(db: Session, qr_code: str):
     item = db.query(Table).filter(Table.qr_code == qr_code).first()

@@ -11,6 +11,10 @@ from ..common.encryption import *
 from sqlalchemy.orm import Session
 
 class UserService:
+    async def get_users_service(db: Session, page:int, page_size:int):
+        user = get_users_db(db, page, page_size)
+        return user
+    
     async def get_profile_service(db: Session):
         user = get_users(db)
         return user
