@@ -23,3 +23,9 @@ class UserCreate(BaseModel):
     email: str
     role: str
     phone_number: str
+
+class UserUpdate(BaseModel):
+    name: str
+    email: str
+    role: str
+    phone_number: str

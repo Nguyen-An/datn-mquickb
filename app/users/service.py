@@ -27,9 +27,21 @@ class UserService:
             name = userCreate.name,
             email = userCreate.email,
             password_hash = password_hash,
-            role = "customer_qr",
+            role = userCreate.role,
             phone_number = userCreate.phone_number,
         )
 
         user = create_user_db(db, new_user)
         return user
+    
+    async def update_user_service(db: Session,item_id: int, userUpdate: UserUpdate):
+        existing_item = get_table_by_id(db, item_id)
+        if not existing_item:
+            raise HTTPException(
+                status_code=404, detail=f"User with id {item_id} not found."
+        )
+
+        menuItem = update_user_db(db, item_id, userUpdate)
+        return menuItem
+    
+    
