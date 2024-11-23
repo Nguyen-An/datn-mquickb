@@ -57,6 +57,11 @@ class OrderService:
         list_order = get_order_db(db, order_id, page, page_size)
         return list_order
     
+    async def get_order_item_service(db: Session, info_user, page: int, page_size: int):
+
+        list_order = get_order_items_db(db, page, page_size)
+        return list_order
+    
     async def get_staff_call_service(db: Session, info_user, page: int, page_size: int):
         list_staff_call = get_staff_call_db(db, page, page_size)
         return list_staff_call
