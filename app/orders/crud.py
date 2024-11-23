@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from .models import *
 from datetime import datetime
 from sqlalchemy import desc
+from sqlalchemy.sql import text
 
 def create_order_item_db(db: Session, orderItem: OrderItem):
     db.add(orderItem)
@@ -70,19 +71,38 @@ def get_order_items_db(db: Session, page:int, page_size:int):
         limit = 9999999999
     items = db.query(OrderItem).offset(offset).limit(limit).all()
     total = db.query(OrderItem).count()
-
     total_pages = (total + page_size - 1) // page_size
+
+    query_get_list = text("""
+        SELECT oi.*, 
+            mi.name AS menu_item_name
+        FROM order_items oi
+        JOIN menu_items mi ON oi.menu_item_id = mi.id
+        ORDER BY oi.id
+        LIMIT :limit OFFSET :offset;
+    """)
+
+    # Thực thi câu lệnh SQL với phân trang
+    result_list = db.execute(query_get_list, {"limit": 10, "offset": 0})
+
+    # Lấy kết quả dưới dạng danh sách các từ điển
+    result = result_list.mappings().all()
+
     return {
         "total": total, 
         "total_pages": total_pages, 
         "current_page": page, 
         "page_size": page_size, 
-        "data": items
+        "data": result
     }
 
 
 def get_order_id_by_user_id(db: Session, user_id: int):
     item = db.query(Order).filter(Order.user_id == user_id).order_by(desc(Order.created_at)).first()
+    return item
+
+def get_order_in_progress_by_table_id(db: Session, table_id: int):
+    item = db.query(Order).filter(Order.table_id == table_id, Order.status == "in_progress").order_by(desc(Order.created_at)).first()
     return item
 
 def check_user_order_table(db: Session, user_id: int):

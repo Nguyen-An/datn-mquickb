@@ -46,6 +46,42 @@ class OrderService:
             order_item = create_order_item_db(db, new_order_item)
             list_order_item.append(order_item)
         return list_order_item
+    
+    async def create_order_item_staff_service(db: Session,info_user, orderItemStaffCreate: OrderItemStaffCreate):
+        # Kiểm tra xem có order_id chưa
+        existing_table_item = get_table_by_id(db, orderItemStaffCreate.table_id)
+        if not existing_table_item:
+            raise HTTPException(
+                status_code=404, detail=f"Table with not found."
+        )
+
+        if existing_table_item.status != "in_use":
+            raise HTTPException(
+                status_code=404, detail="TABLE_NOT_USE"
+        )
+
+        existing_order = get_order_in_progress_by_table_id(db, orderItemStaffCreate.table_id)
+
+        if not existing_order:
+            raise HTTPException(
+                status_code=404, detail="ORDER_DOES_NOT_EXIST"
+        )
+
+        # Thêm order_item vào order 
+        new_order_item = OrderItem(
+            order_id = existing_order.id,
+            menu_item_id = orderItemStaffCreate.menu_item_id,
+            quantity = orderItemStaffCreate.quantity,
+            status = orderItemStaffCreate.status,
+            created_by = info_user.get("id"),
+            updated_by = info_user.get("id")
+        )
+
+        order_item = create_order_item_db(db, new_order_item)
+        return order_item
+
+
+    
 
     async def get_order_service(db: Session, info_user, page: int, page_size: int):
         order_id = None

@@ -53,9 +53,11 @@ class OrderItemCreate(BaseModel):
     quantity: int
     status: str
 
-class listOrderItemStaffCreate(BaseModel):
-    order_id: Optional[int] 
-    items: List[OrderItemCreate]
+class OrderItemStaffCreate(BaseModel):
+    table_id: Optional[int] 
+    menu_item_id: int
+    quantity: int
+    status: str
 
 class listOrderItemCreate(BaseModel):
     items: List[OrderItemCreate]

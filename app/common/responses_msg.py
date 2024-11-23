@@ -14,7 +14,8 @@ STT_CODE = {
     "USER_HAS_NOT_BOOKED_TABLE": "Người dùng chưa đặt bàn",
     "USER_HAS_MORE_THAN_ORDER_OR_PENDING_ORDER": "Người dùng đang còn nhiều hơn 1 order hoặc đơn chờ",
     "INCORRECT_LOGIN_TYPE": "Loại đăng nhập không đúng",
-    "TABLE_NOT_USE": "Bàn chưa được sử dụng"
+    "TABLE_NOT_USE": "Bàn chưa được sử dụng",
+    "ORDER_DOES_NOT_EXIST": "Order không tồn tại"
 }
 
 def create_error_response(detail: str, error_code: str):
