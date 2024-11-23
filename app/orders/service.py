@@ -9,20 +9,33 @@ from os import getenv
 from .crud import *
 from ..common.encryption import *
 from sqlalchemy.orm import Session
+from ..tables.crud import *
 
 class OrderService:
     async def create_order_service(db: Session,info_user, orderItemCreate: listOrderItemCreate):
         # Kiểm tra xem có order_id chưa
-        if orderItemCreate.order_id == None:
+        if info_user.get("order_ID") == None:
             raise HTTPException(status_code=400, detail="ORDER_ID_REQUIRED")
+        if info_user.get("table_id") == None:
+            raise HTTPException(status_code=400, detail="TABLE_ID_REQUIRED")
+
+        existing_table_item = get_table_by_id(db, info_user.get("table_id"))
+        if not existing_table_item:
+            raise HTTPException(
+                status_code=404, detail=f"Table with not found."
+        )
+        if existing_table_item.status != "in_use":
+            raise HTTPException(
+                status_code=404, detail="TABLE_NOT_USE"
+        )
 
         # Kiểm tra xem các menu_item_id có tôn tại hoặc hoạt động không
-
         list_order_item = []
+
         # Thêm order_item vào order 
         for orderItem in orderItemCreate.items:
             new_order_item = OrderItem(
-                order_id = orderItemCreate.order_id,
+                order_id = info_user.get("order_ID"),
                 menu_item_id = orderItem.menu_item_id,
                 quantity = orderItem.quantity,
                 status = 'pending',
@@ -32,7 +45,6 @@ class OrderService:
 
             order_item = create_order_item_db(db, new_order_item)
             list_order_item.append(order_item)
-
         return list_order_item
 
     async def get_order_service(db: Session, info_user, page: int, page_size: int):

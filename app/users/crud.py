@@ -29,7 +29,7 @@ def get_user_by_mail(db: Session, email: str):
     user = db.query(User).filter(User.email == email).first()
     return user
 
-def get_table_by_id(db: Session, id: int):
+def get_user_by_id(db: Session, id: int):
     item = db.query(User).filter(User.id == id).first()
     return item
 
@@ -48,4 +48,12 @@ def update_user_db(db: Session, item_id: int, userUpdate: UserUpdate):
     db_item.updated_at = datetime.utcnow()
     db.commit()
     db.refresh(db_item)
+    return db_item
+
+def delete_user_by_id_db(db: Session, item_id: int):
+    db_item = db.query(User).filter(User.id == item_id).first()
+    if not db_item:
+        return None
+    db.delete(db_item)
+    db.commit()
     return db_item

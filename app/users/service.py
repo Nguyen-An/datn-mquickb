@@ -35,7 +35,7 @@ class UserService:
         return user
     
     async def update_user_service(db: Session,item_id: int, userUpdate: UserUpdate):
-        existing_item = get_table_by_id(db, item_id)
+        existing_item = get_user_by_id(db, item_id)
         if not existing_item:
             raise HTTPException(
                 status_code=404, detail=f"User with id {item_id} not found."
@@ -44,4 +44,15 @@ class UserService:
         menuItem = update_user_db(db, item_id, userUpdate)
         return menuItem
     
-    
+    async def delete_user_service(db: Session,item_id: int):
+        try:
+            existing_item = get_user_by_id(db, item_id)
+            if not existing_item:
+                raise HTTPException(
+                    status_code=404, detail=f"User with id {item_id} not found."
+            )
+
+            menuItem = delete_user_by_id_db(db, item_id)
+            return menuItem
+        except Exception as e:
+            raise HTTPException(status_code=500, detail="INTERNAL_SERVER_ERROR")

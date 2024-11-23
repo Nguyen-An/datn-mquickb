@@ -13,20 +13,6 @@ router_order = APIRouter(
     tags=["order"],
     responses={404: {"description": "Not found"}},
 )
-
-@router_order.post("")
-async def create_order(request:Request, orderItemCreate: listOrderItemCreate, db: Session = Depends(get_db)):
-    try:      
-        info_user = request.state.info_user
-
-        loi = await OrderService.create_order_service(db,info_user, orderItemCreate)
-        
-        return loi
-    except Exception as e:
-        return JSONResponse(
-            status_code=e.status_code,
-            content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
-        )  
     
 @router_order.get("")
 async def get_order(request:Request, page: int = 1, page_size: int = 20, db: Session = Depends(get_db)):
@@ -70,6 +56,19 @@ async def get_staff_call(request:Request,page: int = 1, page_size: int = 20, db:
     try:      
         info_user = request.state.info_user
         loi = await OrderService.get_staff_call_service(db,info_user, page, page_size)
+        return loi
+    except Exception as e:
+        return JSONResponse(
+            status_code=e.status_code,
+            content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
+        )  
+    
+@router_order.post("/customer")
+async def create_order(request:Request, orderItemCreate: listOrderItemCreate, db: Session = Depends(get_db)):
+    try:      
+        info_user = request.state.info_user
+        loi = await OrderService.create_order_service(db,info_user, orderItemCreate)
+        
         return loi
     except Exception as e:
         return JSONResponse(

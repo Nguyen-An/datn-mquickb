@@ -36,17 +36,15 @@ class MenuService:
             raise HTTPException(status_code=500, detail="INTERNAL_SERVER_ERROR")
         
     async def update_menu_item(db: Session,item_id: int, menuItemCreate : MenuItemCreate):
-        try:
-            existing_item = get_menu_item_by_id(db, item_id)
-            if not existing_item:
-                raise HTTPException(
-                    status_code=404, detail=f"MenuItem with id {item_id} not found."
-            )
+        existing_item = get_menu_item_by_id(db, item_id)
+        if not existing_item:
+            raise HTTPException(
+                status_code=404, detail=f"MenuItem with id {item_id} not found."
+        )
 
-            menuItem = update_menu_item_db(db, item_id, menuItemCreate)
-            return menuItem
-        except Exception as e:
-            raise HTTPException(status_code=500, detail="INTERNAL_SERVER_ERROR")
+        menuItem = update_menu_item_db(db, item_id, menuItemCreate)
+        return menuItem
+
 
     async def delete_menu_item(db: Session,item_id: int):
         try:

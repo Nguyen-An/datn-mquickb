@@ -36,6 +36,28 @@ async def create_user(request:Request, userCreate: UserCreate, db: Session = Dep
             content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
         )  
     
+@router_users.put("/{item_id}")
+async def update_user(request:Request,item_id: int, userUpdate : UserUpdate, db: Session = Depends(get_db)):
+    try:
+        mi = await UserService.update_user_service(db,item_id, userUpdate)
+        return mi
+    except Exception as e:
+        return JSONResponse(
+            status_code=e.status_code,
+            content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
+        )  
+    
+@router_users.delete("/{item_id}")
+async def delete_user(request:Request,item_id: int, db: Session = Depends(get_db)):
+    try:
+        mi = await UserService.delete_user_service(db,item_id)
+        return mi
+    except Exception as e:
+        return JSONResponse(
+            status_code=e.status_code,
+            content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
+        )  
+    
 @router_users.get("/profile")
 async def get_profile_user(request:Request, db: Session = Depends(get_db)):
     try:
@@ -49,13 +71,3 @@ async def get_profile_user(request:Request, db: Session = Depends(get_db)):
             content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
         )  
     
-@router_users.put("/{item_id}")
-async def update_table_item(request:Request,item_id: int, userUpdate : UserUpdate, db: Session = Depends(get_db)):
-    try:
-        mi = await UserService.update_user_service(db,item_id, userUpdate)
-        return mi
-    except Exception as e:
-        return JSONResponse(
-            status_code=e.status_code,
-            content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
-        )  
