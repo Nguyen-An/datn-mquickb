@@ -11,6 +11,7 @@ class Table(Base):
     id = Column(Integer, primary_key=True, index=True)
     table_name = Column(String(50))
     qr_code = Column(String(255))
+    order_id = Column(Integer, default=None)
     status = Column(String(20), default='available')
     created_at = Column(TIMESTAMP, default=datetime.utcnow)
     updated_at = Column(TIMESTAMP, default=datetime.utcnow, onupdate=datetime.utcnow)

@@ -76,11 +76,11 @@ async def create_order(request:Request, orderItemCreate: listOrderItemCreate, db
             content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
         )  
     
-@router_order.get("/order-items")
-async def get_order(request:Request, page: int = 1, page_size: int = 20, db: Session = Depends(get_db)):
+@router_order.get("/customer")
+async def get_order_by_customer(request:Request, page: int = 1, page_size: int = 20, db: Session = Depends(get_db)):
     try:      
         info_user = request.state.info_user
-        loi = await OrderService.get_order_item_service(db,info_user, page, page_size)
+        loi = await OrderService.get_order_by_customer_service(db,info_user, page, page_size)
         
         return loi
     except Exception as e:
@@ -92,7 +92,7 @@ async def get_order(request:Request, page: int = 1, page_size: int = 20, db: Ses
 
 @router_order.post("/order-items")
 async def get_order(request:Request, orderItemStaffCreate: OrderItemStaffCreate, db: Session = Depends(get_db)):
-    try:      
+    try:
         info_user = request.state.info_user
         loi = await OrderService.create_order_item_staff_service(db,info_user, orderItemStaffCreate)
         return loi
@@ -101,3 +101,15 @@ async def get_order(request:Request, orderItemStaffCreate: OrderItemStaffCreate,
             status_code=e.status_code,
             content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
         )  
+    
+@router_order.post("/pay/{table_id}")
+async def pay_order(request:Request,table_id: int, db: Session = Depends(get_db)):
+    try:
+        mi = await OrderService.pay_order_service(db, table_id)
+        return mi
+    except Exception as e:
+        return JSONResponse(
+            status_code=e.status_code,
+            content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
+        )  
+    

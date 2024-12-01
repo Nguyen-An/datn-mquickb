@@ -12,11 +12,13 @@ from ..common.encryption import *
 
 class MenuService: 
     async def get_list_menu_item(db: Session, page:int, page_size:int):
-        try:
-            list_menu_items = get_list_menu_item(db, page, page_size)
-            return list_menu_items
-        except Exception as e:
-            raise HTTPException(status_code=500, detail="INTERNAL_SERVER_ERROR")
+        list_menu_items = get_list_menu_item(db, page, page_size)
+        return list_menu_items
+
+        
+    async def get_menu_for_customer_service(db: Session, info_user, page:int, page_size:int):
+        menu_items_for_customer = get_menu_for_customer_db(db, page, page_size)
+        return menu_items_for_customer
 
 
     async def create_menu_item(db: Session, menuItemCreate : MenuItemCreate):

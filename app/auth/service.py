@@ -112,14 +112,6 @@ class AuthService:
 
             new_user_qr = create_user_db(db, new_user)
 
-            # Cập nhật status bàn -> in_use 
-            tableUpdate = TableUpdate(
-                table_name = table.table_name,
-                qr_code = table.qr_code,
-                status = "in_use" 
-            )
-            update_table_db(db,table.id, tableUpdate)
-
             # Tạo order có trạng thái -> in_progress
             new_order = Order(
                 user_id = new_user_qr.id,
@@ -128,6 +120,17 @@ class AuthService:
                 status = 'in_progress',
             )
             order = create_order_db(db, new_order)
+
+            # Cập nhật status bàn -> in_use 
+            tableUpdate = TableUpdate(
+                table_name = table.table_name,
+                qr_code = table.qr_code,
+                status = "in_use", 
+                order_id = new_order.id
+            )
+            update_table_db(db,table.id, tableUpdate)
+
+            
 
             # get token
             data = { 

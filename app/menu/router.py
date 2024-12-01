@@ -25,6 +25,18 @@ async def get_list_menu_item(request:Request, page:int=1, page_size:int=20, db: 
             content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
         )  
     
+@router_menus.get("/customer")
+async def get_list_menu_item(request:Request, page:int=1, page_size:int=20, db: Session = Depends(get_db)):
+    try:
+        info_user = request.state.info_user
+        mi = await MenuService.get_menu_for_customer_service(db,info_user,page,page_size)
+        return mi
+    except Exception as e:
+        return JSONResponse(
+            status_code=e.status_code,
+            content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
+        )  
+    
 @router_menus.post("")
 async def create_menu_item(request:Request, menuItemCreate : MenuItemCreate, db: Session = Depends(get_db)):
     try:
@@ -36,7 +48,6 @@ async def create_menu_item(request:Request, menuItemCreate : MenuItemCreate, db:
             status_code=e.status_code,
             content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
         )  
-    
 
 @router_menus.put("/{item_id}")
 async def update_menu_item(request:Request,item_id: int, menuItemUpdate : MenuItemUpdate, db: Session = Depends(get_db)):

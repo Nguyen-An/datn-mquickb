@@ -27,6 +27,24 @@ def get_list_menu_item(db: Session, page: int, page_size: int):
         "data": items
         }
 
+def get_menu_for_customer_db(db: Session, page: int, page_size: int):
+    offset = (int(page) - 1) * int(page_size)
+    limit = page_size
+    if page == -1:
+        offset = 1
+        limit = 9999999999
+        total_pages = 1
+    total = db.query(MenuItem).filter(MenuItem.is_available == True).count()
+    total_pages = (total + page_size - 1) // page_size
+    items = db.query(MenuItem).filter(MenuItem.is_available == True).offset(offset).limit(limit).all()
+    return {
+        "total": total, 
+        "total_pages": total_pages, 
+        "current_page": page, 
+        "page_size": page_size, 
+        "data": items
+        }
+
 def get_menu_item_by_id(db: Session, item_id: int):
     item = db.query(MenuItem).filter(MenuItem.id == item_id).first()
     return item

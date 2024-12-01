@@ -80,22 +80,14 @@ class OrderService:
         order_item = create_order_item_db(db, new_order_item)
         return order_item
 
-
-    
-
     async def get_order_service(db: Session, info_user, page: int, page_size: int):
-        order_id = None
-        
-        # if info_user.get("role_id") != "manager" and info_user.get("role_id") != "staff":
-        #     order = get_order_id_by_user_id(db, int(info_user.get("user_id")))
-        #     order_id = order.id
-
-        list_order = get_order_db(db, order_id, page, page_size)
+        list_order = get_order_db(db, page, page_size)
         return list_order
     
-    async def get_order_item_service(db: Session, info_user, page: int, page_size: int):
+    async def get_order_by_customer_service(db: Session, info_user, page: int, page_size: int):
+        order_id = info_user.get('order_ID')
 
-        list_order = get_order_items_db(db, page, page_size)
+        list_order = get_order_items_db(db, order_id, page, page_size)
         return list_order
     
     async def get_staff_call_service(db: Session, info_user, page: int, page_size: int):
@@ -113,3 +105,16 @@ class OrderService:
 
         staff_call = create_staff_call_db(db, new_staff_call)
         return staff_call
+    
+    async def pay_order_service(db: Session, table_id):
+        # Lấy order_id theo table
+
+        # Kiểm tra Tất cả order_item phải có trạng thái đã phục vụ hoặc từ chối
+
+        # Cập nhật trạng thái bàn
+
+        # Cập nhật trạng thái order_item thành đã thanh toán
+
+        # Cập nhật order thành đã thanh toán
+        
+        return 1

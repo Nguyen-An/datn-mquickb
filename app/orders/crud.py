@@ -23,18 +23,14 @@ def create_staff_call_db(db: Session, staffCall: StaffCall):
     db.refresh(staffCall)
     return staffCall
 
-def get_order_db(db: Session,order_id, page:int, page_size:int):
+def get_order_db(db: Session, page:int, page_size:int):
     offset = (int(page) - 1) * int(page_size)
     limit = page_size
     if page == -1:
         offset = 1
         limit = 9999999999
-    if order_id is None:
-        items = db.query(OrderItem).offset(offset).limit(limit).all()
-        total = db.query(OrderItem).count()
-    else:
-        items = db.query(OrderItem).filter(OrderItem.order_id == order_id).all()
-        total = db.query(OrderItem).filter(OrderItem.order_id == order_id).count()
+    items = db.query(OrderItem).offset(offset).limit(limit).all()
+    total = db.query(OrderItem).count()
 
     total_pages = (total + page_size - 1) // page_size
     return {
@@ -63,7 +59,7 @@ def get_staff_call_db(db: Session, page:int, page_size:int):
         "data": items
         }
 
-def get_order_items_db(db: Session, page:int, page_size:int):
+def get_order_items_db(db: Session, order_id, page:int, page_size:int):
     offset = (int(page) - 1) * int(page_size)
     limit = page_size
     if page == -1:
@@ -78,12 +74,13 @@ def get_order_items_db(db: Session, page:int, page_size:int):
             mi.name AS menu_item_name
         FROM order_items oi
         JOIN menu_items mi ON oi.menu_item_id = mi.id
+        WHERE oi.order_id = :order_id
         ORDER BY oi.id
         LIMIT :limit OFFSET :offset;
     """)
 
     # Thực thi câu lệnh SQL với phân trang
-    result_list = db.execute(query_get_list, {"limit": 10, "offset": 0})
+    result_list = db.execute(query_get_list, {"order_id": order_id, "limit": limit, "offset": offset})
 
     # Lấy kết quả dưới dạng danh sách các từ điển
     result = result_list.mappings().all()
