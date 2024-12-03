@@ -89,6 +89,30 @@ async def get_order_by_customer(request:Request, page: int = 1, page_size: int =
             content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
         )  
 
+@router_order.get("/order-items")
+async def get_order(request:Request, page: int = 1, page_size: int = 20, db: Session = Depends(get_db)):
+    try:
+        info_user = request.state.info_user
+        loi = await OrderService.get_order_item_staff_service(db,info_user, page, page_size)
+        return loi
+    except Exception as e:
+        return JSONResponse(
+            status_code=e.status_code,
+            content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
+        )  
+    
+
+@router_order.put("/order-items/{item_id}")
+async def update_order_item_staff_service(request:Request, item_id: int, orderStatusUpdate: OrderStatusUpdate , db: Session = Depends(get_db)):
+    try:
+        info_user = request.state.info_user
+        oi = await OrderService.update_order_item_staff_service(db, item_id, orderStatusUpdate)
+        return oi
+    except Exception as e:
+        return JSONResponse(
+            status_code=e.status_code,
+            content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
+        )  
 
 @router_order.post("/order-items")
 async def get_order(request:Request, orderItemStaffCreate: OrderItemStaffCreate, db: Session = Depends(get_db)):

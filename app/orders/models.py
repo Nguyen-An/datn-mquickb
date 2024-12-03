@@ -66,3 +66,6 @@ class listOrderItemCreate(BaseModel):
 class StaffCallCreate(BaseModel):
     table_id: int
     reason: str
+
+class OrderStatusUpdate(BaseModel):
+    status: str

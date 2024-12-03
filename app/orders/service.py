@@ -48,6 +48,22 @@ class OrderService:
             list_order_item.append(order_item)
         return list_order_item
     
+    async def get_order_item_staff_service(db: Session, info_user, page: int, page_size: int):
+
+        items = get_order_item_staff_db(db, page, page_size)
+        return items
+    
+    async def update_order_item_staff_service(db: Session, item_id: int, orderStatusUpdate: OrderStatusUpdate):
+        existing_item = get_order_item_by_id(db, item_id)
+        if not existing_item:
+            raise HTTPException(
+                status_code=404, detail=f"Order Item with id {item_id} not found."
+            )
+        update_status_order_item_db(db, item_id, orderStatusUpdate)
+        item = get_order_item_by_id(db, item_id)
+
+        return item
+    
     async def create_order_item_staff_service(db: Session,info_user, orderItemStaffCreate: OrderItemStaffCreate):
         # Kiểm tra xem có order_id chưa
         existing_table_item = get_table_by_id(db, orderItemStaffCreate.table_id)
