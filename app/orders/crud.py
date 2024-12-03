@@ -93,6 +93,30 @@ def get_order_items_db(db: Session, order_id, page:int, page_size:int):
         "data": result
     }
 
+def get_all_order_items_by_order_id(db: Session, order_id):
+    items = db.query(OrderItem).filter(OrderItem.order_id == order_id).all()
+    return items
+
+def update_order_items_status(db: Session, order_id: int, new_status: str = "paid", excluded_status: str = "rejected"):
+    updated_items = db.query(OrderItem).filter(
+            OrderItem.order_id == order_id,
+            OrderItem.status != excluded_status
+        ).all()
+    # Nếu không có bản ghi nào để cập nhật
+    if not updated_items:
+        return []
+
+    # Cập nhật trạng thái của tất cả các bản ghi đã tìm được
+    for item in updated_items:
+        item.status = new_status
+        db.add(item)
+
+    # Lưu thay đổi vào cơ sở dữ liệu
+        db.commit()
+
+    # Trả về số lượng bản ghi đã cập nhật và danh sách ID của các bản ghi đó
+    updated_ids = [item.id for item in updated_items]
+    return updated_ids
 
 def get_order_id_by_user_id(db: Session, user_id: int):
     item = db.query(Order).filter(Order.user_id == user_id).order_by(desc(Order.created_at)).first()

@@ -126,11 +126,9 @@ class AuthService:
                 table_name = table.table_name,
                 qr_code = table.qr_code,
                 status = "in_use", 
-                order_id = new_order.id
+                order_id = order.id
             )
             update_table_db(db,table.id, tableUpdate)
-
-            
 
             # get token
             data = { 

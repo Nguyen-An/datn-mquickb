@@ -108,13 +108,30 @@ class OrderService:
     
     async def pay_order_service(db: Session, table_id):
         # Lấy order_id theo table
+        table = get_table_by_id(db, table_id)
 
+        if table is None:
+            raise HTTPException(status_code=404, detail="TABLE_NOT_FOUND")
+        if table.status != "in_use":
+            raise HTTPException(status_code=400, detail="TABLE_NOT_IN_USED")
+        if table.order_id is None:
+            raise HTTPException(status_code=400, detail="THERE_ARE_NO_ORDERS_FOR_THIS_TABLE")
+        
         # Kiểm tra Tất cả order_item phải có trạng thái đã phục vụ hoặc từ chối
-
-        # Cập nhật trạng thái bàn
+        # q_order_items = get_all_order_items_by_order_id(db, table.order_id)
 
         # Cập nhật trạng thái order_item thành đã thanh toán
+        ids = update_order_items_status(db, table.order_id, "paid", "rejected")
+
+        # Cập nhật trạng thái bàn
+        tableUpdate = TableUpdate(
+            table_name = table.table_name,
+            qr_code = table.qr_code,
+            status = "available",
+            order_id = None
+        )
+        update_table_db(db,table.id, tableUpdate)
 
         # Cập nhật order thành đã thanh toán
         
-        return 1
+        return ids

@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, TIMESTAMP
 from sqlalchemy.ext.declarative import declarative_base
 from pydantic import BaseModel
 from datetime import datetime
+from typing import Optional
 
 Base = declarative_base()
 
@@ -25,4 +26,5 @@ class TableUpdate(BaseModel):
     table_name: str
     qr_code: str
     status: str
+    order_id: Optional[int] 
     
