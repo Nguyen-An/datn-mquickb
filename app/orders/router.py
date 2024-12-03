@@ -137,3 +137,25 @@ async def pay_order(request:Request,table_id: int, db: Session = Depends(get_db)
             content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
         )  
     
+
+@router_order.get("/dashboard/revenue")
+async def get_dashboard_revenue( db: Session = Depends(get_db)):
+    try:
+        mi = await OrderService.get_dashboard_revenue_service(db)
+        return mi
+    except Exception as e:
+        return JSONResponse(
+            status_code=e.status_code,
+            content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
+        )  
+
+@router_order.get("/dashboard/order")
+async def get_dashboard_order( db: Session = Depends(get_db)):
+    try:
+        mi = await OrderService.get_dashboard_order_service(db)
+        return mi
+    except Exception as e:
+        return JSONResponse(
+            status_code=e.status_code,
+            content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
+        )  

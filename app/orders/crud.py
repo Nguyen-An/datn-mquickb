@@ -186,3 +186,50 @@ def update_order_db(db: Session, item_id: int, orderUpdate: OrderUpdate):
     db.commit()
     db.refresh(db_item)
     return db_item
+
+
+def get_dashboard_revenue_db(db: Session):
+    query_get_list = text("""
+        SELECT
+            EXTRACT(MONTH FROM oi.created_at) AS month,
+            SUM(oi.quantity * oi.price) AS total_revenue
+        FROM
+            order_items oi
+        WHERE
+            EXTRACT(YEAR FROM oi.created_at) = 2024
+            AND oi.status = 'paid'
+        GROUP BY
+            EXTRACT(MONTH FROM oi.created_at)
+        ORDER BY
+            month;
+    """)
+
+    result_list = db.execute(query_get_list)
+
+    result = result_list.mappings().all()
+
+    return result
+
+
+def get_dashboard_order_db(db: Session):
+    query_get_list = text("""
+        SELECT
+            EXTRACT(MONTH FROM o.created_at) AS month,
+            COUNT(o.id) AS total_orders
+        FROM
+            orders o
+        WHERE
+            EXTRACT(YEAR FROM o.created_at) = 2024
+        GROUP BY
+            EXTRACT(MONTH FROM o.created_at)
+        ORDER BY
+            month;
+    """)
+
+    result_list = db.execute(query_get_list)
+
+    result = result_list.mappings().all()
+
+    return result
+
+

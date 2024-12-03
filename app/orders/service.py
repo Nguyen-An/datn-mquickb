@@ -152,3 +152,13 @@ class OrderService:
         # Cập nhật order thành đã thanh toán
         
         return ids
+    
+    async def get_dashboard_revenue_service(db: Session):
+        revenue = get_dashboard_revenue_db(db)
+        return revenue
+    
+    async def get_dashboard_order_service(db: Session):
+        order = get_dashboard_order_db(db)
+        return order
+    
+    
