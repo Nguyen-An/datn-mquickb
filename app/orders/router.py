@@ -126,7 +126,7 @@ async def get_order(request:Request, orderItemStaffCreate: OrderItemStaffCreate,
             content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
         )  
     
-@router_order.post("/pay/{table_id}")
+@router_order.put("/pay/{table_id}")
 async def pay_order(request:Request,table_id: int, db: Session = Depends(get_db)):
     try:
         mi = await OrderService.pay_order_service(db, table_id)
