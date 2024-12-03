@@ -52,6 +52,7 @@ class OrderItemCreate(BaseModel):
     menu_item_id: int
     quantity: int
     status: str
+    price: int
 
 class OrderItemStaffCreate(BaseModel):
     table_id: Optional[int] 

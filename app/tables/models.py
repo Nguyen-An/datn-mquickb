@@ -26,5 +26,5 @@ class TableUpdate(BaseModel):
     table_name: str
     qr_code: str
     status: str
-    order_id: Optional[int] 
+    order_id: Optional[int] = None
     

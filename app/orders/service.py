@@ -39,6 +39,7 @@ class OrderService:
                 menu_item_id = orderItem.menu_item_id,
                 quantity = orderItem.quantity,
                 status = 'pending',
+                price = orderItem.price,
                 created_by = info_user.get("id"),
                 updated_by = info_user.get("id")
             )
