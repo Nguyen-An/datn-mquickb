@@ -103,9 +103,11 @@ def get_order_item_staff_db(db: Session, page:int, page_size:int):
 
     query_get_list = text("""
         SELECT oi.*, 
-            mi.name AS menu_item_name
+            mi.name AS menu_item_name,
+            t.table_name AS name_table
         FROM order_items oi
         JOIN menu_items mi ON oi.menu_item_id = mi.id
+        LEFT JOIN tables t ON t.order_id = oi.order_id
         ORDER BY oi.id DESC
         LIMIT :limit OFFSET :offset;
     """)
