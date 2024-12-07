@@ -58,3 +58,12 @@ async def create_assistant(request:Request, createAssistant: CreateAssistant, db
     except Exception as e:
         print(e)
         return "err"
+    
+@router_chat_bot.post("/assistant/thread")
+async def create_thread(request:Request, db: Session = Depends(get_db)):
+    try:
+        thread = await AsyncOpenAI(api_key=open_api_key).beta.threads.create()    
+        return thread
+    except Exception as e:
+        print(e)
+        return "err"

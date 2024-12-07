@@ -16,6 +16,7 @@ from fastapi.responses import JSONResponse
 from .common.api_const import paths
 import socketio
 from app.chatbot.service import ChatbotService
+import asyncio
 
 @asynccontextmanager
 async def lifespan_context(app: FastAPI):
@@ -68,14 +69,23 @@ app.mount("/", socket_app)
 async def connect(sid, environ):    
     with get_db_manager() as db:             
         await chat.set_up_handle(db,sio,sid) 
-
-    await sio.emit('message', "Message from server to "+sid,to=sid)
+    await sio.emit('connect_ok', "Message from server to "+sid,to=sid)
 
 @sio.on('disconnect')
 async def disconnect(sid):
     pass
 
-# @sio.on('message')
-# async def message(sid, data):      
-#     with get_db_manager() as db:             
-#         await chat.chat_handler(data,db,sio,sid)
+@sio.on('message')
+async def message(sid, data):      
+    with get_db_manager() as db:             
+        await chat.chat_handler(data,db,sio,sid)
+
+# @sio.on("message")
+# async def message(sid, data):
+#     try:
+#         print(f"Start sending numbers from 1 to 50 to: {sid}")
+#         for number in range(1, 51):  # Phát từng số từ 1 đến 50
+#             await sio.emit("message", {"number": number}, to=sid)
+#             await asyncio.sleep(1)  # Đợi 1 giây trước khi gửi số tiếp theo
+#     except Exception as e:
+#         print(f"Error in 'message' event: {e}")
