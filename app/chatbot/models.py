@@ -13,3 +13,15 @@ class ChatbotData(Base):
     file_path = Column(String(255))
     key = Column(String(255))
     uploaded_at = Column(TIMESTAMP)
+
+class CreateAssistant(BaseModel):
+    name: str = None
+    instructions: str = None
+    model:str  = 'gpt-4-turbo'
+    vector_store_id: str
+
+class CreateUserThread(BaseModel):
+    name: str = None   
+
+class MessageThread(BaseModel):
+    mes: str = ""
