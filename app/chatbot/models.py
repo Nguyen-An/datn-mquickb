@@ -17,7 +17,7 @@ class ChatbotData(Base):
 class CreateAssistant(BaseModel):
     name: str = None
     instructions: str = None
-    model:str  = 'gpt-4-turbo'
+    model:str  = 'gpt-3.5-turbo'
 
 class CreateUserThread(BaseModel):
     name: str = None   
