@@ -8,11 +8,15 @@ from app.auth.router import router_auth
 from app.menu.router import router_menus
 from app.uploadfile.router import router_uploadfile
 from app.orders.router import router_order
+from app.chatbot.router import router_chat_bot
 from app.tables.router import router_tables
 from app.auth.utils import gettoken, checktoken
 from app.common.responses_msg import *
 from fastapi.responses import JSONResponse
 from .common.api_const import paths
+import socketio
+from app.chatbot.service import ChatbotService
+import asyncio
 
 @asynccontextmanager
 async def lifespan_context(app: FastAPI):
@@ -52,4 +56,36 @@ app.include_router(router_menus)
 app.include_router(router_order)
 app.include_router(router_tables)
 app.include_router(router_uploadfile)
+app.include_router(router_chat_bot)
 load_dotenv()
+chat = ChatbotService()
+
+sio  = socketio.AsyncServer(async_mode='asgi',cors_allowed_origins=[])
+socket_app = socketio.ASGIApp(sio)
+
+app.mount("/", socket_app)
+
+@sio.on('connect')
+async def connect(sid, environ):    
+    with get_db_manager() as db:             
+        await chat.set_up_handle(db,sio,sid) 
+    await sio.emit('connect_ok', "Message from server to "+sid,to=sid)
+
+@sio.on('disconnect')
+async def disconnect(sid):
+    pass
+
+@sio.on('message')
+async def message(sid, data):      
+    with get_db_manager() as db:             
+        await chat.chat_handler(data,db,sio,sid)
+
+# @sio.on("message")
+# async def message(sid, data):
+#     try:
+#         print(f"Start sending numbers from 1 to 50 to: {sid}")
+#         for number in range(1, 51):  # Phát từng số từ 1 đến 50
+#             await sio.emit("message", {"number": number}, to=sid)
+#             await asyncio.sleep(1)  # Đợi 1 giây trước khi gửi số tiếp theo
+#     except Exception as e:
+#         print(f"Error in 'message' event: {e}")
