@@ -129,3 +129,7 @@ CREATE TABLE orders (
 -- update 1/12/2024
 ALTER TABLE tables
 ADD COLUMN order_id INTEGER DEFAULT NULL;
+
+--update 10/12/2024
+ALTER TABLE staff_calls
+RENAME COLUMN table_id TO order_id;
