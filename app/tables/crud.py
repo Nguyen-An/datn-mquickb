@@ -2,6 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from .models import *
 from datetime import datetime
+from sqlalchemy.sql import text
 
 def get_tables_db(db: Session, page: int, page_size: int):
     offset = (int(page) - 1) * int(page_size)
@@ -12,14 +13,26 @@ def get_tables_db(db: Session, page: int, page_size: int):
         total_pages = 1
     total = db.query(Table).count()
     total_pages = (total + page_size - 1) // page_size
-    items = db.query(Table).offset(offset).limit(limit).all()
+    query_get_list = text("""
+        SELECT tb.*
+        FROM tables tb
+        ORDER BY tb.updated_at DESC
+        LIMIT :limit OFFSET :offset;
+    """)
+
+    # Thực thi câu lệnh SQL với phân trang
+    result_list = db.execute(query_get_list, {"limit": limit, "offset": offset})
+
+    # Lấy kết quả dưới dạng danh sách các từ điển
+    result = result_list.mappings().all()
+
     return {
         "total": total, 
         "total_pages": total_pages, 
         "current_page": page, 
         "page_size": page_size, 
-        "data": items
-        }
+        "data": result
+    }
 
 def create_table_db(db: Session, table: Table):
     db.add(table)
