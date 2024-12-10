@@ -39,23 +39,11 @@ async def create_staff_call(request:Request, staffCallCreate: StaffCallCreate, d
             content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
         )  
     
-# @router_order.put("/staff-call/{staff_call_id}")
-# async def create_staff_call(request:Request, staffCallCreate: StaffCallCreate, db: Session = Depends(get_db)):
-#     try:      
-#         info_user = request.state.info_user
-#         loi = await OrderService.create_staff_call_service(db,info_user, staffCallCreate)
-#         return loi
-#     except Exception as e:
-#         return JSONResponse(
-#             status_code=e.status_code,
-#             content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
-#         )  
-    
-@router_order.get("/staff-call")
-async def get_staff_call(request:Request,page: int = 1, page_size: int = 20, db: Session = Depends(get_db)):
+
+@router_order.get("/staff-call/{order_id}")
+async def get_staff_call(request:Request, order_id: int, page: int = 1, page_size: int = 20, db: Session = Depends(get_db)):
     try:      
-        info_user = request.state.info_user
-        loi = await OrderService.get_staff_call_service(db,info_user, page, page_size)
+        loi = await OrderService.get_staff_call_service(db,order_id, page, page_size)
         return loi
     except Exception as e:
         return JSONResponse(

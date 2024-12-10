@@ -40,7 +40,7 @@ class StaffCall(Base):
     __tablename__ = 'staff_calls'
 
     id = Column(Integer, primary_key=True, index=True)
-    table_id = Column(Integer)
+    order_id = Column(Integer)
     reason = Column(Text)
     created_by = Column(Integer)
     updated_by = Column(Integer)
@@ -64,7 +64,7 @@ class listOrderItemCreate(BaseModel):
     items: List[OrderItemCreate]
     
 class StaffCallCreate(BaseModel):
-    table_id: int
+    order_id: int
     reason: str
 
 class OrderStatusUpdate(BaseModel):

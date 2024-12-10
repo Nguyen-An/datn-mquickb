@@ -41,13 +41,13 @@ def get_order_db(db: Session, page:int, page_size:int):
         "data": items
         }
 
-def get_staff_call_db(db: Session, page:int, page_size:int):
+def get_staff_call_db(db: Session, order_id: int, page:int, page_size:int):
     offset = (int(page) - 1) * int(page_size)
     limit = page_size
     if page == -1:
         offset = 0
         limit = 9999999999
-    items = db.query(StaffCall).offset(offset).limit(limit).all()
+    items = db.query(StaffCall).filter(StaffCall.order_id == order_id).order_by(desc(StaffCall.id)).offset(offset).limit(limit).all()
     total = db.query(StaffCall).count()
 
     total_pages = (total + page_size - 1) // page_size

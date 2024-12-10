@@ -14,11 +14,8 @@ def get_tables_db(db: Session, page: int, page_size: int):
     total = db.query(Table).count()
     total_pages = (total + page_size - 1) // page_size
     query_get_list = text("""
-        SELECT tb.*,
-            sc.reason AS staff_calls_reason,
-            sc.status AS staff_calls_status
+        SELECT tb.*
         FROM tables tb
-                LEFT JOIN staff_calls sc ON  sc.order_id = tb.order_id
         ORDER BY tb.updated_at DESC
         LIMIT :limit OFFSET :offset;
     """)
