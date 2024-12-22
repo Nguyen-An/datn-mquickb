@@ -50,7 +50,7 @@ s3_client = boto3.client(
 )
 
 class UploadFileService:
-    async def upload_avatar_to_s3(self, user_info, file: UploadFile, db: Session):
+    async def upload_avatar_to_s3(user_info, file: UploadFile, db: Session):
         # Kiểm tra định dạng file
         file_extension = Path(file.filename).suffix.lower()
         if file_extension not in AVATAR_FILES:
@@ -93,7 +93,7 @@ class UploadFileService:
             print("error: ", e)
             raise HTTPException(status_code=400, detail="UPLOOAD_S3_FAIL")
     
-    async def upload_file_to_s3(self, user_info, file: UploadFile, db: Session):
+    async def upload_file_to_s3(user_info, file: UploadFile, db: Session):
         # Kiểm tra định dạng file
         file_extension = Path(file.filename).suffix.lower()
         if file_extension not in ALLOWED_EXTENSIONS:
@@ -150,15 +150,16 @@ class UploadFileService:
                 key = chatbotDataCreate.key,
                 aifile_id = ""
                 )
-        # aifile = await self.upload_file_to_openai(file_info)
+        aifile = await UploadFileService.upload_file_to_openai(file_info)
 
-        # file_info.aifile_id = aifile.id
+        file_info.aifile_id = aifile.id
 
-        # await AsyncOpenAI(api_key=open_api_key).beta.vector_stores.files.create(vector_store_id=vector_store_id, file_id=file_info.aifile_id) 
+        await AsyncOpenAI(api_key=open_api_key).beta.vector_stores.files.create(vector_store_id=vector_store_id, file_id=file_info.aifile_id) 
         file_result = create_file_db(db, file_info)
         return file_result
         
-    async def upload_file_to_openai(self, file:ChatbotData):
+    @staticmethod
+    async def upload_file_to_openai(file:ChatbotData):
         folder = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'\\statics'
         if not os.path.exists(folder):
             os.makedirs(folder)
@@ -169,3 +170,31 @@ class UploadFileService:
         f.close()                        
         os.remove(path)
         return message_file
+    
+    async def get_files_service(db: Session, page:int, page_size:int):
+        files = get_files_db(db, page, page_size)
+        return files
+    
+    async def delete_file(key: str, db: Session):
+        try:
+            # Xóa file từ bucket
+            try:
+                s3_client.delete_object(Bucket=S3_BUCKET_NAME, Key=key)
+            except s3_client.exceptions.NoSuchKey:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="File not found in S3")
+
+            # Xóa file trong db
+            try:
+                file = delete_file(db, key)
+            except Exception as e:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="File not found in database")
+
+            if file.aifile_id:
+                async with AsyncOpenAI(api_key=open_api_key) as ai_client:
+                    await ai_client.files.delete(file.aifile_id)
+
+            return {"status": "success"}
+
+        except Exception as e:
+            print("er: ", e)
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")

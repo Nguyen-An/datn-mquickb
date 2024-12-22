@@ -53,3 +53,19 @@ async def upload_file_s3(request:Request,chatbotDataCreate: ChatbotDataCreate, d
             status_code=e.status_code,
             content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
         ) 
+    
+
+@router_uploadfile.get("files")
+async def get_files (request:Request, page:int=1, page_size:int=20, db: Session = Depends(get_db)):
+    try:
+        t = await UploadFileService.get_files_service(db, page, page_size)
+        return t
+    except Exception as e:
+        return JSONResponse(
+            status_code=e.status_code,
+            content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
+        )  
+    
+@router_uploadfile.delete("/delete-file/{key}", responses=common_responses)
+async def delete_file(request:Request,key: str, db: Session = Depends(get_db)):
+    return await UploadFileService.delete_file(key, db)
