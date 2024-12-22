@@ -133,3 +133,17 @@ ADD COLUMN order_id INTEGER DEFAULT NULL;
 --update 10/12/2024
 ALTER TABLE staff_calls
 RENAME COLUMN table_id TO order_id;
+
+--update 22/12/2024
+DROP TABLE IF EXISTS chatbot_data;
+
+CREATE TABLE chatbot_data (
+    id SERIAL PRIMARY KEY,
+    file_name VARCHAR(255),
+    describe VARCHAR(1000),
+    file_path VARCHAR(255),
+    file_path_s3 VARCHAR(255),
+    aifile_id VARCHAR(255),
+    key VARCHAR(255),
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

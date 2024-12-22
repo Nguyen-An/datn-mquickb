@@ -6,6 +6,9 @@ from typing import List
 from ..database import get_db
 from sqlalchemy.orm import Session
 from .models import *
+from fastapi.responses import JSONResponse
+from ..common.responses_msg import *
+from ..common.responses import *
 
 router_uploadfile = APIRouter(
     prefix="/uploadfile",
@@ -21,4 +24,32 @@ async def upload_avatar(request:Request,file: UploadFile, db: Session = Depends(
         key =  await upload.upload_avatar_to_s3(user_info,file,db)        
         return key
     except Exception as e:        
-        return Response(status_code=e.status_code, content=str(e)) 
+        return JSONResponse(
+            status_code=e.status_code,
+            content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
+        ) 
+    
+@router_uploadfile.post("/upload/file-s3")
+async def upload_file_s3(request:Request,file: UploadFile, db: Session = Depends(get_db)):  
+    user_info = request.state.info_user
+    try:
+        key =  await upload.upload_file_to_s3(user_info,file,db)        
+        return key
+    except Exception as e:        
+        return JSONResponse(
+            status_code=e.status_code,
+            content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
+        ) 
+    
+@router_uploadfile.post("/upload/file")
+async def upload_file_s3(request:Request,chatbotDataCreate: ChatbotDataCreate, db: Session = Depends(get_db)):  
+    user_info = request.state.info_user
+    try:
+        key =  await upload.upload_file_chatbot(user_info, chatbotDataCreate, db)        
+        return key
+    except Exception as e:
+        print("err: ", e)
+        return JSONResponse(
+            status_code=e.status_code,
+            content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
+        ) 
