@@ -16,12 +16,12 @@ router_uploadfile = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-upload = UploadFileService()
+UploadFileService
 @router_uploadfile.post("/upload/avatar")
 async def upload_avatar(request:Request,file: UploadFile, db: Session = Depends(get_db)):  
     user_info = request.state.info_user
     try:
-        key =  await upload.upload_avatar_to_s3(user_info,file,db)        
+        key =  await UploadFileService.upload_avatar_to_s3(user_info,file,db)        
         return key
     except Exception as e:        
         return JSONResponse(
@@ -33,7 +33,7 @@ async def upload_avatar(request:Request,file: UploadFile, db: Session = Depends(
 async def upload_file_s3(request:Request,file: UploadFile, db: Session = Depends(get_db)):  
     user_info = request.state.info_user
     try:
-        key =  await upload.upload_file_to_s3(user_info,file,db)        
+        key =  await UploadFileService.upload_file_to_s3(user_info,file,db)        
         return key
     except Exception as e:        
         return JSONResponse(
@@ -45,7 +45,7 @@ async def upload_file_s3(request:Request,file: UploadFile, db: Session = Depends
 async def upload_file_s3(request:Request,chatbotDataCreate: ChatbotDataCreate, db: Session = Depends(get_db)):  
     user_info = request.state.info_user
     try:
-        key =  await upload.upload_file_chatbot(user_info, chatbotDataCreate, db)        
+        key =  await UploadFileService.upload_file_chatbot(db, user_info, chatbotDataCreate)        
         return key
     except Exception as e:
         print("err: ", e)

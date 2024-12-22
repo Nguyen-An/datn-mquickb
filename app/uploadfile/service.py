@@ -141,20 +141,22 @@ class UploadFileService:
             raise HTTPException(status_code=400, detail="UPLOOAD_S3_FAIL")
         
 
-    async def upload_file_chatbot(self, user_info, chatbotDataCreate: ChatbotDataCreate, db: Session):
+    async def upload_file_chatbot(db: Session, user_info, chatbotDataCreate: ChatbotDataCreate):
         file_info = ChatbotData(
                 file_name = chatbotDataCreate.file_name,
-                file_path_s3 = chatbotDataCreate.file_path_s3,
                 describe = chatbotDataCreate.describe,
+                file_path = chatbotDataCreate.file_path,
+                file_path_s3 = chatbotDataCreate.file_path_s3,
                 key = chatbotDataCreate.key,
+                aifile_id = ""
                 )
-        aifile = await self.upload_file_to_openai(file_info)
+        # aifile = await self.upload_file_to_openai(file_info)
 
-        file_info.aifile_id = aifile.id
+        # file_info.aifile_id = aifile.id
 
-        await AsyncOpenAI(api_key=open_api_key).beta.vector_stores.files.create(vector_store_id=vector_store_id, file_id=file_info.aifile_id) 
-        # file_result = create_file_db(db, file_info)
-        return file_info
+        # await AsyncOpenAI(api_key=open_api_key).beta.vector_stores.files.create(vector_store_id=vector_store_id, file_id=file_info.aifile_id) 
+        file_result = create_file_db(db, file_info)
+        return file_result
         
     async def upload_file_to_openai(self, file:ChatbotData):
         folder = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'\\statics'

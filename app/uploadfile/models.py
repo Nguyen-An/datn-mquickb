@@ -16,7 +16,7 @@ class ChatbotData(Base):
     file_path_s3 = Column(String(255))  # Đường dẫn S3, độ dài tối đa 255 ký tự
     key = Column(String(255))  # Khóa, độ dài tối đa 255 ký tự
     aifile_id = Column(String(255))  # ID của file trong hệ thống AI, độ dài tối đa 255 ký tự
-    uploaded_at = Column(TIMESTAMP, default='CURRENT_TIMESTAMP')
+    uploaded_at = Column(TIMESTAMP, default=datetime.utcnow)
 
 class ChatbotDataCreate(BaseModel):
     file_name: str
