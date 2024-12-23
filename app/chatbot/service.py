@@ -38,13 +38,15 @@ class ChatbotService:
         message:str = data.get("message") or ''
         name = message[:50] if len(message) > 50 else message
         body:CreateUserThread = CreateUserThread(name = name)   
-
+        
+        print("thread_id: ", thread_id)
+        await sio.emit('thread', thread_id,to=sid)
         if not thread_id:
             thread = await AsyncOpenAI(api_key=open_api_key).beta.threads.create()    
-            thread_id = thread.thread_id
-
+            thread_id = thread.id
+            print("thread_id: ", thread_id)
             await sio.emit('thread', thread_id,to=sid)
-        
+
         async for result in self.run_thread_stream(db,thread_id, message):
             await sio.emit('message', result,to=sid)
 
