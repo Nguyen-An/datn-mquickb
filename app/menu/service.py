@@ -11,8 +11,8 @@ from .crud import *
 from ..common.encryption import *
 
 class MenuService: 
-    async def get_list_menu_item(db: Session, page:int, page_size:int):
-        list_menu_items = get_list_menu_item(db, page, page_size)
+    async def get_list_menu_item(db: Session, page:int, page_size:int, key_word:str):
+        list_menu_items = get_list_menu_item(db, page, page_size, key_word)
         return list_menu_items
 
         
