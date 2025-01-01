@@ -15,10 +15,10 @@ router_order = APIRouter(
 )
     
 @router_order.get("")
-async def get_order(request:Request, page: int = 1, page_size: int = 20, db: Session = Depends(get_db)):
+async def get_order(request:Request, page: int = 1, page_size: int = 20, status: str = None, db: Session = Depends(get_db)):
     try:      
         info_user = request.state.info_user
-        loi = await OrderService.get_order_service(db,info_user, page, page_size)
+        loi = await OrderService.get_order_service(db,info_user, page, page_size, status)
         
         return loi
     except Exception as e:

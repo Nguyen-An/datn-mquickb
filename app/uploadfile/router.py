@@ -56,9 +56,9 @@ async def upload_file_s3(request:Request,chatbotDataCreate: ChatbotDataCreate, d
     
 
 @router_uploadfile.get("/files")
-async def get_files (request:Request, page:int=1, page_size:int=20, db: Session = Depends(get_db)):
+async def get_files (request:Request, page:int=1, page_size:int=20, key_word:str="", db: Session = Depends(get_db)):
     try:
-        t = await UploadFileService.get_files_service(db, page, page_size)
+        t = await UploadFileService.get_files_service(db, page, page_size, key_word)
         return t
     except Exception as e:
         return JSONResponse(

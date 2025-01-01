@@ -171,8 +171,8 @@ class UploadFileService:
         os.remove(path)
         return message_file
     
-    async def get_files_service(db: Session, page:int, page_size:int):
-        files = get_files_db(db, page, page_size)
+    async def get_files_service(db: Session, page:int, page_size:int, key_word:str):
+        files = get_files_db(db, page, page_size, key_word)
         return files
     
     async def delete_file(key: str, db: Session):

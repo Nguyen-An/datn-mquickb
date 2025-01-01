@@ -97,8 +97,8 @@ class OrderService:
         order_item = create_order_item_db(db, new_order_item)
         return order_item
 
-    async def get_order_service(db: Session, info_user, page: int, page_size: int):
-        list_order = get_order_db(db, page, page_size)
+    async def get_order_service(db: Session, info_user, page: int, page_size: int, status: str = None):
+        list_order = get_order_db(db, page, page_size, status)
         return list_order
     
     async def get_order_by_customer_service(db: Session, info_user, page: int, page_size: int):

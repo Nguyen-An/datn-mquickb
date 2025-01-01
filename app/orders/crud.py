@@ -23,23 +23,39 @@ def create_staff_call_db(db: Session, staffCall: StaffCall):
     db.refresh(staffCall)
     return staffCall
 
-def get_order_db(db: Session, page:int, page_size:int):
-    offset = (int(page) - 1) * int(page_size)
+def get_order_db(db: Session, page: int, page_size: int, status: str = None):
+    # Tính toán offset và limit
+    offset = (page - 1) * page_size
     limit = page_size
+
+    # Nếu page == -1, bỏ qua giới hạn phân trang
     if page == -1:
         offset = 0
-        limit = 9999999999
-    items = db.query(OrderItem).offset(offset).limit(limit).all()
-    total = db.query(OrderItem).count()
+        limit = None  # Không giới hạn số lượng
 
-    total_pages = (total + page_size - 1) // page_size
+    # Xây dựng query
+    query = db.query(OrderItem)
+    
+    # Thêm điều kiện lọc theo status nếu được truyền vào
+    if status:
+        query = query.filter(OrderItem.status == status)
+
+    # Tính tổng số lượng bản ghi
+    total = query.count()
+
+    # Tính tổng số trang
+    total_pages = (total + page_size - 1) // page_size if page_size > 0 else 1
+
+    # Lấy danh sách đơn hàng với phân trang
+    items = query.offset(offset).limit(limit).all()
+
     return {
-        "total": total, 
-        "total_pages": total_pages, 
-        "current_page": page, 
-        "page_size": page_size, 
-        "data": items
-        }
+        "total": total,
+        "total_pages": total_pages,
+        "current_page": page,
+        "page_size": page_size,
+        "data": items,
+    }
 
 def get_staff_call_db(db: Session, order_id: int, page:int, page_size:int):
     offset = (int(page) - 1) * int(page_size)
