@@ -14,9 +14,9 @@ router_users = APIRouter(
 )
 
 @router_users.get("")
-async def get_users(request:Request, page:int=1, page_size:int=20, db: Session = Depends(get_db)):
+async def get_users(request:Request, page:int=1, page_size:int=20, key_word:str="", db: Session = Depends(get_db)):
     try:
-        u = await UserService.get_users_service(db,page,page_size)
+        u = await UserService.get_users_service(db,page,page_size,key_word)
         return u
     except Exception as e:
         return JSONResponse(
