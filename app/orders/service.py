@@ -48,9 +48,9 @@ class OrderService:
             list_order_item.append(order_item)
         return list_order_item
     
-    async def get_order_item_staff_service(db: Session, info_user, page: int, page_size: int):
+    async def get_order_item_staff_service(db: Session, info_user, page: int, page_size: int, status: str = None):
 
-        items = get_order_item_staff_db(db, page, page_size)
+        items = get_order_item_staff_db(db, page, page_size, status)
         return items
     
     async def update_order_item_staff_service(db: Session, item_id: int, orderStatusUpdate: OrderStatusUpdate):

@@ -78,10 +78,11 @@ async def get_order_by_customer(request:Request, page: int = 1, page_size: int =
         )  
 
 @router_order.get("/order-items")
-async def get_order(request:Request, page: int = 1, page_size: int = 20, db: Session = Depends(get_db)):
+async def get_order(request:Request, page: int = 1, page_size: int = 20, status: str = None, db: Session = Depends(get_db)):
     try:
+        print("status: ", status)
         info_user = request.state.info_user
-        loi = await OrderService.get_order_item_staff_service(db,info_user, page, page_size)
+        loi = await OrderService.get_order_item_staff_service(db,info_user, page, page_size, status)
         return loi
     except Exception as e:
         return JSONResponse(

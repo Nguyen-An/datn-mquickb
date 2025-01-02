@@ -108,37 +108,55 @@ def get_order_items_db(db: Session, order_id, page:int, page_size:int):
         "data": result
     }
 
-def get_order_item_staff_db(db: Session, page:int, page_size:int):
+def get_order_item_staff_db(db: Session, page: int, page_size: int, status: str = None):
     offset = (int(page) - 1) * int(page_size)
     limit = page_size
     if page == -1:
         offset = 0
         limit = 9999999999
-    total = db.query(OrderItem).count()
-    total_pages = (total + page_size - 1) // page_size
 
-    query_get_list = text("""
+    # Xử lý điều kiện WHERE cho status
+    status_condition = ""
+    params = {"limit": limit, "offset": offset}
+    if status and status.lower() != "all":
+        status_condition = "WHERE oi.status = :status"
+        params["status"] = status
+
+    # Truy vấn tổng số lượng bản ghi
+    count_query = text(f"""
+        SELECT COUNT(*) 
+        FROM order_items oi
+        {status_condition}
+    """)
+    total = db.execute(count_query, params).scalar()
+
+    # Tính tổng số trang
+    total_pages = (total + page_size - 1) // page_size if page_size > 0 else 1
+
+    # Truy vấn danh sách order items
+    query_get_list = text(f"""
         SELECT oi.*, 
             mi.name AS menu_item_name,
             t.table_name AS name_table
         FROM order_items oi
         JOIN menu_items mi ON oi.menu_item_id = mi.id
         LEFT JOIN tables t ON t.order_id = oi.order_id
+        {status_condition}
         ORDER BY oi.id DESC
         LIMIT :limit OFFSET :offset;
     """)
 
-    # Thực thi câu lệnh SQL với phân trang
-    result_list = db.execute(query_get_list, {"limit": limit, "offset": offset})
+    # Thực thi truy vấn danh sách
+    result_list = db.execute(query_get_list, params)
 
-    # Lấy kết quả dưới dạng danh sách các từ điển
+    # Lấy kết quả
     result = result_list.mappings().all()
 
     return {
-        "total": total, 
-        "total_pages": total_pages, 
-        "current_page": page, 
-        "page_size": page_size, 
+        "total": total,
+        "total_pages": total_pages,
+        "current_page": page,
+        "page_size": page_size,
         "data": result
     }
 

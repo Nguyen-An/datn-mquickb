@@ -3,3 +3,4 @@ statics/
 data/
 .venv/
 .env
+.codegpt
