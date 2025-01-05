@@ -148,3 +148,14 @@ async def get_dashboard_order( db: Session = Depends(get_db)):
             status_code=e.status_code,
             content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
         )  
+
+@router_order.get("/bill-order/{order_id}")
+async def get_bill_by_order(request:Request, order_id: int, db: Session = Depends(get_db)):
+    try:      
+        loi = await OrderService.get_bill_by_order_service(db,order_id)
+        return loi
+    except Exception as e:
+        return JSONResponse(
+            status_code=e.status_code,
+            content=create_error_response(e.detail, STT_CODE.get(e.detail, "Unknown error code"))
+        )
