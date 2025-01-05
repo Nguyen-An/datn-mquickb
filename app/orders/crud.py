@@ -268,4 +268,13 @@ def get_dashboard_order_db(db: Session):
 
     return result
 
+def get_bill_by_order_db(db: Session, order_id: int):
+    query_get_list = text("""
+        SELECT SUM(oi.price * oi.quantity) as total
+        FROM order_items oi
+        WHERE oi.order_id = :order_id
+        AND oi.status NOT IN ('rejected')
+    """)
 
+    result = db.execute(query_get_list, {"order_id": order_id}).scalar()
+    return result

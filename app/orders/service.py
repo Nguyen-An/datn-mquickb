@@ -161,4 +161,7 @@ class OrderService:
         order = get_dashboard_order_db(db)
         return order
     
+    async def get_bill_by_order_service(db: Session, order_id: int ):
+        bill = get_bill_by_order_db(db, order_id)
+        return bill
     
