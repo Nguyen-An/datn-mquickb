@@ -21,6 +21,9 @@ def get_users_db(db: Session, page: int, page_size: int, key_word: str = None):
     # Query cơ bản
     query = db.query(User)
 
+    # Chỉ lấy những bản ghi có role là "manager" hoặc "staff"
+    query = query.filter(or_(User.role == "manager", User.role == "staff"))
+
     # Thêm điều kiện tìm kiếm nếu có từ khóa
     if key_word:
         query = query.filter(

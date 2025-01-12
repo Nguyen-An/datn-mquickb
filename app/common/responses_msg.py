@@ -17,7 +17,8 @@ STT_CODE = {
     "INCORRECT_LOGIN_TYPE": "Loại đăng nhập không đúng",
     "TABLE_NOT_USE": "Bàn chưa được sử dụng",
     "ORDER_DOES_NOT_EXIST": "Order không tồn tại",
-    "THERE_ARE_NO_ORDERS_FOR_THIS_TABLE": "There are no orders for this table."
+    "THERE_ARE_NO_ORDERS_FOR_THIS_TABLE": "There are no orders for this table.",
+    "EMAIL_IS_ALREADY_IN_USE": "Email này đã được sử dụng!"
 }
 
 def create_error_response(detail: str, error_code: str):
