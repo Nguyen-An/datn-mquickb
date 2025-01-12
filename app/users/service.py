@@ -20,6 +20,11 @@ class UserService:
         return user
     
     async def create_user_service(db: Session, userCreate: UserCreate):
+        # get user
+        user = get_user_by_mail(db, userCreate.email)
+        if user:
+            raise HTTPException(status_code=404, detail="EMAIL_IS_ALREADY_IN_USE")
+        
         # check role
         password_hash = hash_password("123456aA@")
 
