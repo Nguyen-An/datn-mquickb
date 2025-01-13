@@ -45,7 +45,7 @@ async def add_process_time_header(request: Request, call_next):
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://datn-mquickb-fe-v2.vercel.app", "http://localhost:3000"],
+    allow_origins=["https://datn-mquickb-fe-v2.vercel.app", "http://localhost:3000", "https://mquickb.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
