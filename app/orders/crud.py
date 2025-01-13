@@ -139,7 +139,7 @@ def get_order_item_staff_db(db: Session, page: int, page_size: int, status: str 
             mi.name AS menu_item_name,
             t.table_name AS name_table
         FROM order_items oi
-        JOIN menu_items mi ON oi.menu_item_id = mi.id
+        LEFT JOIN menu_items mi ON oi.menu_item_id = mi.id
         LEFT JOIN tables t ON t.order_id = oi.order_id
         {status_condition}
         ORDER BY oi.id DESC
